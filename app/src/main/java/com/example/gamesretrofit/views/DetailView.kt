@@ -31,10 +31,16 @@ import com.example.gamesretrofit.util.Constants.Companion.CUSTOM_COLOR
 import com.example.gamesretrofit.viewModel.GamesViewModel
 
 @Composable
-fun DetailView(gamesViewModel: GamesViewModel, navController: NavController, id: Int) {
+fun DetailView(gamesViewModel: GamesViewModel, navController: NavController, id: Int, name: String?) {
 
     LaunchedEffect(Unit) {
-        gamesViewModel.fetchGameById(id)
+        if (id == 0) {
+            if (name != null) {
+                gamesViewModel.fetchGameByName(name.replace(" ","-"))
+            }
+        } else {
+            gamesViewModel.fetchGameById(id)
+        }
     }
 
     DisposableEffect(Unit) {
