@@ -3,6 +3,8 @@ package com.example.gamesretrofit.repository
 
 import com.example.gamesretrofit.data.ApiGames
 import com.example.gamesretrofit.models.GameModel
+import com.example.gamesretrofit.models.GamesModelResponse
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class GamesRepository @Inject constructor(private val apiGames: ApiGames) {
@@ -15,6 +17,11 @@ class GamesRepository @Inject constructor(private val apiGames: ApiGames) {
         }
         return null
 
+    }
+
+    suspend fun getGamesPAging(page: Int, pageSize: Int): GamesModelResponse {
+        delay(3000L)
+        return apiGames.getGamesPaging(page, pageSize)
     }
 
     suspend fun getGameById(id: Int): GameModel? {

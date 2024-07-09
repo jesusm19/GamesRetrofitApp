@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.gamesretrofit.components.CardGame
 import com.example.gamesretrofit.components.MainTopBar
 import com.example.gamesretrofit.util.Constants.Companion.CUSTOM_COLOR
@@ -52,8 +53,9 @@ fun ContentHomeView(
     paddingValues: PaddingValues,
     navController: NavController,
 ) {
-    val listGames by gamesViewModel.listGames.collectAsState()
+    //val listGames by gamesViewModel.listGames.collectAsState()
     var search by remember { mutableStateOf("") }
+    val gamesPage = gamesViewModel.gamesPages.collectAsLazyPagingItems()
     
 
     Column (
@@ -78,24 +80,29 @@ fun ContentHomeView(
                     navController.navigate("DetailView/${zero}/?${search}")
                 }
             ),
-            modifier = Modifier.fillMaxWidth().padding(start = 10.dp, end = 10.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, end = 10.dp)
         )
         
         LazyColumn(modifier = Modifier
             .padding(paddingValues)
             .background(Color(CUSTOM_COLOR))) {
-            items(listGames) { game ->
 
-                CardGame(game) {
-                    navController.navigate("DetailView/${game.id}/?${search}")
+            items(gamesPage.itemCount) { index ->
+                val game = gamesPage[index]
+                if(game != null) {
+                    CardGame(game) {
+                        navController.navigate("DetailView/${game.id}/?${search}")
+                    }
+
+                    Text(
+                        text = game.name,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color.White,
+                        modifier = Modifier.padding(start = 10.dp)
+                    )
                 }
-
-                Text(
-                    text = game.name,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = Color.White,
-                    modifier = Modifier.padding(start = 10.dp)
-                )
 
             }
         }
